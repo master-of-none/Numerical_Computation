@@ -13,13 +13,19 @@ int main(){
 
     // Entering the values for low,high and panels
     printf("Enter lower value of the integral\n");
+    //change value here
     scanf("%lf",&low);
+    //low = ;
 
     printf("Enter higher value of the integral\n");
+    //change value here
     scanf("%lf",&high);
+    //high = ;
 
     printf("Enter total panels or 'n' value\n");
+    //change value here
     scanf("%d",&panels);
+    // panels = ;
 
     integration = simpsons(low,high,panels);
     printf("Final Integration value is : %lf \n",integration);
