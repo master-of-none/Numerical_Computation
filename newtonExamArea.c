@@ -1,17 +1,30 @@
+/*
+  Program to draw the Newton Form of Polynomial and  Calculate the area
+
+  Author : Shrikrishna Bhat
+*/
+
 #include "FPToolkit.c"
 double swidth, sheight;
+
+// We are defining 3 user defined functions to draw newton polynomial, to
+// calculate area in cubic and calculate area in quadratics.
 void newtonPolynomial(double x[], double y[], int points);
 double findAreaCubic(double x[], double y[], int cur);
 double findAreaQuadratic(double x[], double y[], int cur);
 
+// Global variables used in calculation of Area
 double Z10, Z21, Z32, Z210, Z321, Z3210, Y0, X0, X1, X2;
 
+// Defining equation of quadratic
 #define f(x) (Y0 + Z10 * (x - X0) + Z210 * (x - X0) * (x - X1))
 
+// Defining equation of cubic
 #define g(x)                                                                   \
 	(Y0 + Z10 * (x - X0) + Z210 * (x - X0) * (x - X1) +                        \
 	 Z3210 * (x - X0) * (x - X1) * (x - X2))
 
+// Main Driver program
 int main(int argc, char **argv) {
 	FILE *fptr;
 	int numpoints, degree;
@@ -65,40 +78,27 @@ int main(int argc, char **argv) {
 		G_fill_circle(x[i], y[i], 4);
 	}
 	// YOUR CODE GOES HERE
+
+	// Call the newton Polynomial function
 	newtonPolynomial(x, y, numpoints);
 	G_wait_key();
 }
+
+/*
+  User defined Newton polynomial function
+We are passing the x array, y array and total points
+*/
 void newtonPolynomial(double x[], double y[], int points) {
+	// Declare local variables
 	double z10, z21, z32, z210, z321, z3210;
 
 	double X, Y;
 	int cur = 0;
 	int coeff;
-	/*for (X = x[coeff]; X <= x[coeff + 3]; X += 0.01) {
-		coeff = 0;
-
-		z10 = (y[cur + 1] - y[cur]) / (x[cur + 1] - x[cur]);
-		z21 = (y[cur + 2] - y[cur + 1]) / (x[cur + 2] - x[cur + 1]);
-		z32 = (y[cur + 3] - y[cur + 2]) / (x[cur + 3] - x[cur + 2]);
-
-		z210 = (z21 - z10) / (x[cur + 2] - x[cur]);
-		z321 = (z32 - z21) / (x[cur + 3] - x[cur + 1]);
-
-		z3210 = (z321 - z210) / (x[cur + 3] - x[cur]);
-		Y = 0.0;
-		Y += y[cur] + z10 * (X - x[cur]) +
-			z210 * (X - x[cur]) * (X - x[cur + 1]) +
-			z3210 * (X - x[cur]) * (X - x[cur + 1]) * (X - x[cur + 2]);
-
-		if (X == x[coeff + 3]) {
-			cur += 3;
-			coeff += 3;
-		}
-		G_fill_circle(X, Y, 1);
-
-	*/
-	// int num = points % 3;
-	// printf("%d\n", num);
+	/*
+	Below is the code to calculate Total Number of cubics and total number of
+	quadratics
+  */
 	int r, d, n, q, c;
 	n = points;
 
@@ -116,43 +116,12 @@ void newtonPolynomial(double x[], double y[], int points) {
 	}
 
 	printf("Cubic : %d, quadratic : %d\n", c, q);
-	/////
-	// Commenting Quadratic code
-	/////
-	/*
-	  if (points == 3 || points == 5) {
-		  G_rgb(0, 0, 1);
-		  for (X = 0.0; X < 800; X++) {
-			  if (X > x[0]) {
-				  if (X > x[points - 1])
-					  break;
-				  z10 = (y[cur + 1] - y[cur]) / (x[cur + 1] - x[cur]);
-				  z21 = (y[cur + 2] - y[cur + 1]) / (x[cur + 2] - x[cur + 1]);
 
-				  // printf("%lf ", z32);
-				  // if (y[cur + 3] - y[cur + 2] < 0)
-				  // break;
-
-				  z210 = (z21 - z10) / (x[cur + 2] - x[cur]);
-				  z321 = (z32 - z21) / (x[cur + 3] - x[cur + 1]);
-
-				  Y = y[cur] + z10 * (X - x[cur]) +
-					  z210 * (X - x[cur]) * (X - x[cur + 1]) +
-					  G_fill_circle(X, Y, 1);
-				  if (X == x[cur + 2]) {
-					  printf("Here is Quadratic\n");
-					  cur = cur + 2;
-					  G_line(x[0], y[0], x[0], 0);
-					  G_line(X, Y, X, 0);
-				  }
-			  }
-		  }
-	  }
-	*/
-	//// Comment ends here
-
+	// Here we will be drawing the quadratics
 	int quadratic = 0;
 	double area, totalAreaQuadratic = 0, totalAreaCubic = 0;
+
+	// These are for 2 edge cases when there are 3 or 5 points
 	if (points == 3 || points == 5) {
 		for (X = 0.0; X < 800; X++) {
 			G_rgb(0, 1, 0);
@@ -194,11 +163,14 @@ void newtonPolynomial(double x[], double y[], int points) {
 			}
 		}
 	}
+	// Printing area under quadratic
 	printf("\n\nTotal area Under the Quadratic is : %lf\n", totalAreaQuadratic);
 
 	int cubic = 0;
 	totalAreaCubic = 0;
 	area = 0;
+
+	// Here we will draw the cubics
 	for (X = 0.0; X < 800; X++) {
 		G_rgb(1, 0, 0);
 		if (X > x[0]) {
@@ -243,6 +215,8 @@ void newtonPolynomial(double x[], double y[], int points) {
 			}
 		}
 	}
+
+	// Total area under cubics
 	printf("\n\nTotal area Under the Cubic is : %lf\n\n", totalAreaCubic);
 	// printf("x[cur] is : %lf\n", x[cur]);
 
@@ -250,6 +224,8 @@ void newtonPolynomial(double x[], double y[], int points) {
 	area = 0;
 	G_rgb(0, 0, 1);
 	quadratic = 0;
+
+	// Here we will draw the remaining quadratics
 	for (X = 0.0; X < 800; X++) {
 		if (X > x[cur]) {
 			if (X > x[points - 1])
@@ -287,10 +263,15 @@ void newtonPolynomial(double x[], double y[], int points) {
 			}
 		}
 	}
+
+	// Printing Total area under quadratics
 	printf(
 		"\n\nTotal area Under the Quadratic is : %lf\n\n", totalAreaQuadratic);
 }
 
+/*
+  User defined function to find the Area of cubics
+*/
 double findAreaCubic(double x[], double y[], int cur) {
 	double lower, upper, integration = 0.0, stepSize, k;
 	int i, subInterval = 15;
@@ -311,6 +292,9 @@ double findAreaCubic(double x[], double y[], int cur) {
 	return integration;
 }
 
+/*
+  User defined function to find the Area of Quadratics
+*/
 double findAreaQuadratic(double x[], double y[], int cur) {
 	double lower, upper, integration = 0.0, stepSize, k;
 	int i, subInterval = 15;
